@@ -114,7 +114,18 @@ public class Product implements Serializable {
 		Product other = (Product) obj;
 		return Objects.equals(id, other.id);
 	}
-	
-	
+
+
+
+	public Set<Category> getCategories() {
+		return categories;
+	}
+
+
+
+	public void setCategories(Set<Category> categories) {
+		this.categories = categories;
+	}
+
 	
 }
