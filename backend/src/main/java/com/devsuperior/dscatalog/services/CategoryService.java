@@ -2,7 +2,6 @@ package com.devsuperior.dscatalog.services;
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
@@ -63,9 +62,11 @@ public class CategoryService {
 	public void delete(Long id) {
 		try {
 			repository.deleteById(id);
-		} catch (EmptyResultDataAccessException e) {
+		} 
+		catch (EmptyResultDataAccessException e) {
 			throw new ResourceNotFoundException("ID not found teste.");
-		} catch (DataIntegrityViolationException e) {
+		} 
+		catch (DataIntegrityViolationException e) {
 			throw new DatabaseException("Integrity Violation");
 		}
 		
