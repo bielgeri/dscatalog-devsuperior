@@ -3,10 +3,10 @@ package com.devsuperior.dscatalog.repositories;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.dao.EmptyResultDataAccessException;
 
 import com.devsuperior.dscatalog.entities.Product;
 
@@ -16,9 +16,18 @@ public class ProductRepositoryTests {
 	@Autowired
 	private ProductRepository repository;
 	
+	private long existingId;
+	private long nonExistingId;
+	
+	@BeforeEach
+	void setUp() throws Exception {
+		existingId = 1L;
+		nonExistingId = 26L;
+	}
+	
 	@Test 
 	public void deleteShouldDeleteObjetWhenIdExist() {
-		long existingId = 1L;
+		
 		repository.deleteById(existingId);
 		
 		Optional<Product> result =  repository.findById(existingId);
@@ -26,14 +35,14 @@ public class ProductRepositoryTests {
 	}
 	
 	@Test
-	public void deleteShouldThrowEmpytResultDataAcessExceptionDoesNotExist() {
+	public void deleteShouldThrowAMessageIfIDDoesNotExist() {
 		
-		 long nonExistingId = 10000L;
-		 
-		Assertions.assertThrows(EmptyResultDataAccessException.class, () -> {
-			repository.deleteById(nonExistingId);
-		});
-	}
+		long countBefore = repository.count();
+		repository.deleteById(nonExistingId);
+		long countAfter = repository.count();
+		
+		Assertions.assertEquals(countBefore, countAfter);
+		}
 		
 	
 }

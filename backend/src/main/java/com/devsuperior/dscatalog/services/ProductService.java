@@ -24,9 +24,11 @@ import jakarta.persistence.EntityNotFoundException;
 @Service
 public class ProductService {
 
-	private final ProductRepository repository;
+	@Autowired
+	private  ProductRepository repository;
 	
-	private final CategoryRepository categoryRepository;
+	@Autowired
+	private  CategoryRepository categoryRepository;
 
 	ProductService(CategoryRepository categoryRepository, ProductRepository repository) {
 		this.categoryRepository = categoryRepository;
@@ -69,14 +71,15 @@ public class ProductService {
 	}
 
 	public void delete(Long id) {
+		if (!repository.existsById(id)) {
+			throw new ResourceNotFoundException("ID not found");
+		}
+		
 		try {
 			repository.deleteById(id);
 		} 
-		catch (EmptyResultDataAccessException e) {
-			throw new ResourceNotFoundException("ID not found teste.");
-		} 
 		catch (DataIntegrityViolationException e) {
-			throw new DatabaseException("Integrity Violation");
+			throw new DatabaseException("Integrity violation");
 		}
 		
 	}

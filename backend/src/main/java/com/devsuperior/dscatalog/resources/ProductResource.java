@@ -25,8 +25,11 @@ import com.devsuperior.dscatalog.services.ProductService;
 @RequestMapping(value = "/products")
 public class ProductResource {
 	
-	@Autowired
-	private ProductService service;
+	private final ProductService service;
+
+	ProductResource(ProductService service) {
+		this.service = service;
+	}
 	
 	@GetMapping
 	public ResponseEntity<Page<ProductDTO>> findall(Pageable pageable) {
