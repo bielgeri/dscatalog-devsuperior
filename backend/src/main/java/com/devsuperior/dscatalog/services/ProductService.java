@@ -72,7 +72,7 @@ public class ProductService {
 
 	public void delete(Long id) {
 		if (!repository.existsById(id)) {
-			throw new ResourceNotFoundException("ID not found");
+			throw new ResourceNotFoundException("ID not found" + 1L);
 		}
 		
 		try {
