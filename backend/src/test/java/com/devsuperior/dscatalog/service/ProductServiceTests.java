@@ -21,6 +21,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.devsuperior.dscatalog.dto.ProductDTO;
 import com.devsuperior.dscatalog.entities.Product;
+import com.devsuperior.dscatalog.repositories.CategoryRepository;
 import com.devsuperior.dscatalog.repositories.ProductRepository;
 import com.devsuperior.dscatalog.services.ProductService;
 import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
@@ -34,6 +35,9 @@ public class ProductServiceTests {
 	
 	@Mock
 	private ProductRepository repository;
+	
+	@Mock
+	private CategoryRepository categoryRepository;
 	
 	private long existingId;
 	private long nonExistingId;
@@ -63,6 +67,24 @@ public class ProductServiceTests {
 		Mockito.doNothing().when(repository).deleteById(existingId);	
 		Mockito.doThrow(EmptyResultDataAccessException.class).when(repository).deleteById(nonExistingId);
 		Mockito.doThrow(DataIntegrityViolationException.class).when(repository).deleteById(dependentId);
+	}
+	
+	@Test
+	public void findByIdShouldThrowResourceNotFoundExceptionWhenIdDoNotExst() {
+		Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+			service.findById(nonExistingId);
+		});
+		Mockito.verify(repository, Mockito.times(1)).findById(nonExistingId);
+	}
+	
+	@Test
+	public void findByIdShoudReturnProductDTOWhenIdExist() {
+		ProductDTO result = service.findById(existingId);
+		
+		Assertions.assertNotNull(result);
+		Assertions.assertEquals(existingId, result.getId());
+		
+		Mockito.verify(repository, Mockito.times(1)).findById(existingId);
 	}
 	
 	@Test
